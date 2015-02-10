@@ -1,4 +1,6 @@
-# http://anh.cs.luc.edu/331/code/aes.py
+# Benjamin Chasnov
+# bchasnov@hmc.edu
+# 2/9/15
 
 # Rijndael S-box
 sbox =  [0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67,
@@ -73,19 +75,6 @@ def shiftRows(s):
     newState[12:16] = s[15:16] + s[12:15]
     return newState
 
-def galois_multiplication(a, b):
-    """Galois multiplication of 8 bit characters a and b."""
-    p = 0
-    for counter in range(8):
-        if b & 1: p ^= a
-        hi_bit_set = a & 0x80
-        a <<= 1
-        # keep a 8 bit
-        a &= 0xFF
-        if hi_bit_set:
-            a ^= 0x1b
-        b >>= 1
-    return p
 
 def mixColumns(state):
     """ MixColumns() Transformation, section 5.1.3 """
@@ -113,8 +102,29 @@ def addRoundKey(state, roundKey):
         state[i] ^= roundKey[i]
     return state
 
+# The following four functions were obtained from
+# http://anh.cs.luc.edu/331/code/aes.py temporarily 
+
+def galois_multiplication(a, b):
+    """Galois multiplication of 8 bit characters a and b.
+    Copied from http://anh.cs.luc.edu/331/code/aes.py
+    """
+    p = 0
+    for counter in range(8):
+        if b & 1: p ^= a
+        hi_bit_set = a & 0x80
+        a <<= 1
+        # keep a 8 bit
+        a &= 0xFF
+        if hi_bit_set:
+            a ^= 0x1b
+        b >>= 1
+    return p
+
 def core(word, iteration):
-        """Key schedule core."""
+        """Key schedule core.
+        Copied from http://anh.cs.luc.edu/331/code/aes.py
+        """
         word = word[1:] + word[:1] # rotate(1d2c3a4f) == 2c3a4f1d
 
         for i in range(4):
@@ -124,7 +134,9 @@ def core(word, iteration):
         return word
 
 def expandKey(key):
-    """Rijndael's key expansion. """
+    """Rijndael's key expansion.
+    Copied from http://anh.cs.luc.edu/331/code/aes.py
+    """
     
     currentSize = 0
     rconIteration = 1
@@ -147,7 +159,9 @@ def expandKey(key):
     return expandedKey
 
 def createRoundKey(expandedKey, roundKeyPointer):
-    """ Create a round key. """
+    """ Create a round key.
+    Copied from http://anh.cs.luc.edu/331/code/aes.py
+    """
     roundKey = [0] * 16
     for i in range(4):
         for j in range(4):
